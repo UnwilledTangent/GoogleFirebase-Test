@@ -1,0 +1,74 @@
+<html>
+<head>
+	<meta charset="utf-8" />
+	<title>Firebase Web QuickStart</title>
+	<script src="https://www.gstatic.com/firebasejs/5.8.6/firebase.js"></script>
+	<style media="screen">
+		body {
+			display: flex;
+			min-height: 100vh;
+			width: 100%;
+			padding: 0;
+			margin: 0;
+			align-items: center;
+			justify-content: center;
+			flex-direction: column;
+		}
+
+		#uploader {
+			-webkit-appearance: none;
+			width: 50%;
+			margin-bottom: 10px;
+		}
+	</style>
+</head>
+<body>
+	<progress value="0" max="100" id="uploader">0%</progress>
+	<input type="file" value="upload" id="fileButton" />
+
+	<script>
+		// Initialize Firebase
+		var config = {
+			apiKey: "AIzaSyDNWbWVwP13aVZ9qYaXWjzjBPZekuLrG5o",
+			authDomain: "robinfood-beta-9fd5e.firebaseapp.com",
+			databaseURL: "https://robinfood-beta-9fd5e.firebaseio.com",
+			projectId: "robinfood-beta-9fd5e",
+			storageBucket: "robinfood-beta-9fd5e.appspot.com",
+			messagingSenderId: "215177666072"
+		};
+		firebase.initializeApp(config);
+
+		// Get elements
+		var uploader = document.getElementById('uploader');
+		var fileButton = document.getElementById('fileButton');
+
+		// Listen for file selection (or when button is pressed)
+		fileButton.addEventListener('change', function (e) {
+			// Get file
+			var file = e.target.files[0];
+
+			// Create a storage ref
+			var storageRef = firebase.storage().ref('sweet_Pictures/' + file.name);
+
+			// Upload file
+			var task = storageRef.put(file);
+
+			// Update progress bar
+			task.on('state_changed',
+				function progress(snapshot) {
+					var percentage = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+					uploader.value = percentage;
+				},
+
+				function error(err) {
+
+				},
+
+				function complete() {
+
+				}
+			);
+		});
+	</script>
+</body>
+</html>
